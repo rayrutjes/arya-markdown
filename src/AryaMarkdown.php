@@ -14,6 +14,11 @@ class AryaMarkdown implements Plugin
     private $parser;
 
     /**
+     * @var array
+     */
+    private $extensions = ['md', 'markdown'];
+
+    /**
      * @param Parsedown $parser
      */
     public function __construct(Parsedown $parser = null)
@@ -27,6 +32,22 @@ class AryaMarkdown implements Plugin
     public function getParser()
     {
         return $this->parser;
+    }
+
+    /**
+     * @return array
+     */
+    public function getExtensions()
+    {
+        return $this->extensions;
+    }
+
+    /**
+     * @param array $extensions
+     */
+    public function setExtensions(array $extensions)
+    {
+        $this->extensions = array_filter($extensions, 'is_string');
     }
 
     /**
