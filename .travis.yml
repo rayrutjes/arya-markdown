@@ -1,0 +1,12 @@
+language: php
+
+php:
+  - '7.0'
+  - nightly
+
+before_script:
+  - composer self-update
+  - composer install --no-progress --prefer-source
+
+script:
+  - phpunit
