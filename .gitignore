@@ -1,5 +1,3 @@
 /vendor
 .php_cs.cache
 composer.lock
-tests/stubs/build
-tests/stubs/clean-build
