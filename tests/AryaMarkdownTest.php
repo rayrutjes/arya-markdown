@@ -3,6 +3,7 @@
 namespace RayRutjes\AryaMarkdown\Test;
 
 use Parsedown;
+use RayRutjes\Arya\Arya;
 use RayRutjes\AryaMarkdown\AryaMarkdown;
 
 class AryaMarkdownTest extends \PHPUnit_Framework_TestCase
@@ -95,5 +96,25 @@ class AryaMarkdownTest extends \PHPUnit_Framework_TestCase
             [['html', 'markdown'], 'twig', 'index.php', 'index.php'],
             [['blade.php', 'html'], 'html', 'index.blade.php', 'index.html'],
         ];
+    }
+
+    public function testFilesProcessing()
+    {
+        $arya = new Arya(__DIR__);
+        $files = [
+            'index.md'     => ['content' => '**Bold** http://google.com'],
+            'article.html' => ['content' => '**Bold** http://google.com'],
+        ];
+
+        $plugin = new AryaMarkdown();
+
+        $files = $plugin($files, $arya);
+
+        $expected = [
+            'index.html'   => ['content' => '<p><strong>Bold</strong> <a href="http://google.com">http://google.com</a></p>'],
+            'article.html' => ['content' => '**Bold** http://google.com'],
+        ];
+
+        $this->assertEquals($expected, $files);
     }
 }

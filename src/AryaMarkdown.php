@@ -63,6 +63,19 @@ class AryaMarkdown implements Plugin
      */
     public function __invoke(array $files, Arya $arya)
     {
+        $parsed = [];
+        foreach ($files as $filename => $data) {
+            if (!$this->shouldConvert($filename)) {
+                $parsed[$filename] = $data;
+                continue;
+            }
+
+            $data['content'] = $this->parser->parse($data['content']);
+            $destinationFilename = $this->toDestinationFilename($filename);
+            $parsed[$destinationFilename] = $data;
+        }
+
+        return $parsed;
     }
 
     /**
