@@ -9,12 +9,12 @@
     ],
     "require": {
         "php": ">=7.0.0",
-        "rayrutjes/arya": "^0.0.2"
+        "rayrutjes/arya": "^0.0.2",
+        "erusev/parsedown": "^1.6"
 
     },
     "require-dev": {
-        "phpunit/phpunit": "^4.8",
-        "friendsofphp/php-cs-fixer": "^1.11"
+        "phpunit/phpunit": "^4.8"
     },
     "autoload": {
         "psr-4": {
