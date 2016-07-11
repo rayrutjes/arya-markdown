@@ -46,4 +46,54 @@ class AryaMarkdownTest extends \PHPUnit_Framework_TestCase
             [[], []],
         ];
     }
+
+    /**
+     * @dataProvider filenamesProvider
+     */
+    public function testCanDecideIfFileShouldBeConverted(array $extensions, string $filename, bool $expected)
+    {
+        $plugin = new AryaMarkdown();
+        $plugin->setExtensions($extensions);
+        $this->assertEquals($expected, $plugin->shouldConvert($filename));
+    }
+
+    public function filenamesProvider()
+    {
+        return [
+            [['md', 'markdown'], 'index.md', true],
+            [['md', 'markdown'], 'index.html', false],
+            [['html', 'markdown'], 'index.html', true],
+            [['md', 'html'], 'index.html', true],
+            [['blade.php', 'html'], 'index.blade.php', true],
+            [['blade.php', 'html'], 'index.php', false],
+            [['blade.php', 'html'], 'index.twig', false],
+        ];
+    }
+
+    public function testProvidesAReasonableDefaultDestinationExtension()
+    {
+        $plugin = new AryaMarkdown();
+        $this->assertEquals('html', $plugin->getDestinationExtension());
+    }
+
+    /**
+     * @dataProvider destinationFilenamesProvider
+     */
+    public function testCanDetermineTheDestinationFilename(array $extensions, string $destinationExtension, string $filename, string $expected)
+    {
+        $plugin = new AryaMarkdown();
+        $plugin->setExtensions($extensions);
+        $plugin->setDestinationExtension($destinationExtension);
+        $this->assertEquals($expected, $plugin->toDestinationFilename($filename));
+    }
+
+    public function destinationFilenamesProvider()
+    {
+        return [
+            [['md', 'markdown'], 'html', 'index.md', 'index.html'],
+            [['md', 'markdown'], 'blade.php', 'index.md', 'index.blade.php'],
+            [['html', 'markdown'], 'twig', 'index.php', 'index.php'],
+            [['blade.php', 'html'], 'html', 'index.blade.php', 'index.html'],
+        ];
+    }
 }

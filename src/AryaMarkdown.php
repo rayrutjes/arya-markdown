@@ -19,6 +19,11 @@ class AryaMarkdown implements Plugin
     private $extensions = ['md', 'markdown'];
 
     /**
+     * @var string
+     */
+    private $destinationExtension = 'html';
+
+    /**
      * @param Parsedown $parser
      */
     public function __construct(Parsedown $parser = null)
@@ -58,6 +63,65 @@ class AryaMarkdown implements Plugin
      */
     public function __invoke(array $files, Arya $arya)
     {
-        // TODO: Implement __invoke() method.
+    }
+
+    /**
+     * @param string $extension
+     */
+    public function setDestinationExtension(string $extension)
+    {
+        $this->destinationExtension = $extension;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDestinationExtension()
+    {
+        return $this->destinationExtension;
+    }
+
+    /**
+     * @param string $filename
+     *
+     * @return string
+     */
+    public function toDestinationFilename(string $filename)
+    {
+        $filenameLength = strlen($filename);
+        foreach ($this->extensions as $extension) {
+            $extLength = strlen($extension);
+            $suffixLength = $filenameLength - $extLength;
+            $substring = substr($filename, $suffixLength);
+
+            if ($substring === $extension) {
+                $basename = substr($filename, 0, $filenameLength - $extLength);
+
+                return $basename.$this->destinationExtension;
+            }
+        }
+
+        return $filename;
+    }
+
+    /**
+     * @param string $filename
+     *
+     * @return bool
+     */
+    public function shouldConvert(string $filename)
+    {
+        $filenameLength = strlen($filename);
+        foreach ($this->extensions as $extension) {
+            $extLength = strlen($extension);
+            $suffixLength = $filenameLength - $extLength;
+            $substring = substr($filename, $suffixLength);
+
+            if ($substring === $extension) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
